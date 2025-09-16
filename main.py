@@ -7,3 +7,4 @@ todos=[todo1,todo2,todo3]
 print(todos)
 
 print(type(todo1))
+print(type(todo2))
