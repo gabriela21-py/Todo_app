@@ -4,12 +4,12 @@ while True:
     user_action = user_action.strip()
 
     if 'add' in user_action:
-        todo=user_action[4:]
+        todo=user_action[4:].strip()
 
         with open('todos.txt','r') as file:
             todos=file.readlines()
 
-        todos.append(todo)
+        todos.append(todo+'\n')
 
         with open('todos.txt','w') as file:
             file.writelines(todos)

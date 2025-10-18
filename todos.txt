@@ -1,1 +1,4 @@
-run
+write
+swim
+make money
+merg la magazin
