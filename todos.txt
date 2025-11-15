@@ -7,3 +7,4 @@ make a cake
 Make soup
 make homework
 eat an apple
+Master Python
