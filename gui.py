@@ -1,11 +1,12 @@
 import functions
 import FreeSimpleGUI as sg
-
+import time
 
 sg.theme("TanBlue")
 
 HEADER_BG = "#f4d7b5"
 
+clock = sg.Text("",key="clock",text_color="black")
 header = [
     [sg.Text(
         "📝 My cozy To-Do list",
@@ -84,6 +85,7 @@ exit_button = sg.Button(
     size=(10, 1)
 )
 layout = [
+    [clock],
     [sg.Column(header, background_color=HEADER_BG, expand_x=True)],
     [label, sg.Push()],
     [input_box, add_button, edit_button,complete_button ,clear_button],
@@ -103,9 +105,12 @@ window = sg.Window(
 )
 
 while True:
-    event, values = window.read()
-    print(1, event)
-    print(2, values)
+    event, values = window.read(timeout=10)
+
+    if event == sg.WIN_CLOSED or event == "Exit":
+        break
+
+    window["clock"].update(time.strftime("%b %d, %Y %H:%M:%S"))
 
     match event:
         case "Add":
@@ -151,12 +156,19 @@ while True:
                     keep_on_top=True
                 )
         case "Complete":
-            todo_to_complete = values["todos"][0]
-            todos = functions.get_todos()
-            todos.remove(todo_to_complete)
-            functions.write_todos(todos)
-            window["todos"].update(values=todos)
-            window["todo"].update(value="")
+            try:
+                todo_to_complete = values["todos"][0]
+                todos = functions.get_todos()
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window["todos"].update(values=todos)
+                window["todo"].update(value="")
+            except IndexError:
+                sg.popup_no_titlebar("Please select an item first",
+                                     auto_close=True,
+                                     auto_close_duration=1.2,
+                                     keep_on_top=True
+                                     )
         case "Exit":
             break
         case "Clear":
