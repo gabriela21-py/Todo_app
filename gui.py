@@ -33,8 +33,7 @@ add_button = sg.Button(
     "➕ Add",
     key="Add",
     size=(8, 1),
-    mouseover_colors=("white", "#c4884b"),
-    border_width=2
+    mouseover_colors=("white", "#c4884b")
 )
 
 edit_button = sg.Button(
@@ -42,21 +41,23 @@ edit_button = sg.Button(
     key="Edit",
     size=(8, 1),
     mouseover_colors=("white", "#c4884b"),
-    border_width=2
 )
-
+complete_button = sg.Button(
+    "Complete",
+    key="Complete",
+    size=(8, 1),
+    mouseover_colors=("white", "#c4884b"),
+)
 clear_button = sg.Button(
     "🗑 Clear all",
     key="Clear",
     size=(10, 1),
-    mouseover_colors=("white", "#b34b4b"),
-    border_width=2
+    mouseover_colors=("white", "#b34b4b")
 )
 
 list_label = sg.Text(
     "Things to do:",
-    font=("Arial", 14),
-    pad=((0, 0), (15, 5))
+    font=("Arial", 14)
 )
 
 list_box = sg.Listbox(
@@ -69,8 +70,7 @@ list_box = sg.Listbox(
 helper_text = sg.Text(
     "Tip: select an item from the list to edit it 💡",
     font=("Arial", 10, "italic"),
-    text_color="#704214",
-    pad=((0, 0), (10, 5))
+    text_color="#704214"
 )
 
 status_text = sg.Text(
@@ -78,13 +78,16 @@ status_text = sg.Text(
     key="status",
     font=("Arial", 10),
     text_color="#006400",
-    pad=((0, 0), (5, 10))
 )
-
+exit_button = sg.Button(
+    "Exit",
+    size=(10, 1)
+)
 layout = [
     [sg.Column(header, background_color=HEADER_BG, expand_x=True)],
     [label, sg.Push()],
-    [input_box, add_button, edit_button, clear_button],
+    [input_box, add_button, edit_button,complete_button ,clear_button],
+    [exit_button],
     [list_label, sg.Push()],
     [list_box, sg.Push()],
     [helper_text, sg.Push()],
@@ -113,12 +116,6 @@ while True:
                 functions.write_todos(todos)
                 window["todos"].update(values=todos)
                 window["status"].update("✅ Good job! Task added.")
-                sg.popup_no_titlebar(
-                    "Good job! ✅\nTask added to your list.",
-                    auto_close=True,
-                    auto_close_duration=1.3,
-                    keep_on_top=True
-                )
             else:
                 sg.popup_no_titlebar(
                     "Please type something first 🙂",
@@ -153,7 +150,15 @@ while True:
                     auto_close_duration=1.2,
                     keep_on_top=True
                 )
-
+        case "Complete":
+            todo_to_complete = values["todos"][0]
+            todos = functions.get_todos()
+            todos.remove(todo_to_complete)
+            functions.write_todos(todos)
+            window["todos"].update(values=todos)
+            window["todo"].update(value="")
+        case "Exit":
+            break
         case "Clear":
             todos = functions.get_todos()
             if not todos:
